@@ -27,7 +27,7 @@ export function Login() {
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold">Welcome Back</h1>
-                    <p className="text-muted-foreground mt-2">
+                    <p className="text-gray-600 mt-2">
                         Please sign in to your account
                     </p>
                 </div>
@@ -42,7 +42,7 @@ export function Login() {
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -56,7 +56,7 @@ export function Login() {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -72,7 +72,7 @@ export function Login() {
 
                 <p className="text-center text-sm">
                     Don't have an account?{' '}
-                    <Link to="/register" className="text-primary hover:underline">
+                    <Link to="/register" className="text-blue-600 hover:underline">
                         Sign up
                     </Link>
                 </p>

@@ -33,7 +33,7 @@ export function Register() {
             <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold">Create Account</h1>
-                    <p className="text-muted-foreground mt-2">
+                    <p className="text-gray-600 mt-2">
                         Sign up to get started
                     </p>
                 </div>
@@ -48,7 +48,7 @@ export function Register() {
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -62,7 +62,7 @@ export function Register() {
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -76,7 +76,7 @@ export function Register() {
                             id="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             required
                         />
                     </div>
@@ -92,7 +92,7 @@ export function Register() {
 
                 <p className="text-center text-sm">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-primary hover:underline">
+                    <Link to="/login" className="text-blue-600 hover:underline">
                         Sign in
                     </Link>
                 </p>

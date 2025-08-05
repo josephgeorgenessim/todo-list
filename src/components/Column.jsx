@@ -36,14 +36,14 @@ export function Column({ title, status, tasks }) {
                         onDragStart={(e) => handleDragStart(e, task.taskId)}
                     >
                         <h3 className="font-medium">{task.title}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-sm text-gray-600 mt-1">
                             {task.description}
                         </p>
                         <div className="mt-4 flex justify-between items-center">
                             {status === 'pending' && (
                                 <button
                                     onClick={() => moveTask(task.taskId, 'done')}
-                                    className="text-sm text-primary hover:underline"
+                                    className="text-sm text-blue-600 hover:underline"
                                 >
                                     Mark as Done
                                 </button>
@@ -51,7 +51,7 @@ export function Column({ title, status, tasks }) {
                             {status === 'done' && (
                                 <button
                                     onClick={() => moveTask(task.taskId, 'archived')}
-                                    className="text-sm text-primary hover:underline"
+                                    className="text-sm text-blue-600 hover:underline"
                                 >
                                     Archive
                                 </button>
