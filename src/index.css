@@ -6,7 +6,7 @@
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    border-color: #e5e7eb;
   }
 
   body {
