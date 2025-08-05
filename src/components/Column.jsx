@@ -22,7 +22,7 @@ export function Column({ title, status, tasks }) {
 
     return (
         <div
-            className="flex-1 bg-card rounded-lg p-4"
+            className="flex-1 bg-white rounded-lg p-4"
             onDragOver={handleDragOver}
             onDrop={handleDrop}
         >
@@ -31,7 +31,7 @@ export function Column({ title, status, tasks }) {
                 {tasks.map((task) => (
                     <div
                         key={task.taskId}
-                        className="bg-background p-4 rounded-lg shadow-sm cursor-move"
+                        className="bg-gray-50 p-4 rounded-lg shadow-sm cursor-move"
                         draggable
                         onDragStart={(e) => handleDragStart(e, task.taskId)}
                     >

@@ -26,8 +26,8 @@ export function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-background">
-            <header className="bg-card shadow-sm">
+        <div className="min-h-screen bg-white">
+            <header className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
                     <h1 className="text-xl font-semibold">
                         Welcome, {user.username}!
