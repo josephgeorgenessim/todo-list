@@ -1,16 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-primary: 'Inter', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.15);
+  
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
 
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
 
 @layer base {
-  * {
-    border-color: #e5e7eb;
-  }
-
   body {
-    background-color: #ffffff;
-    color: #1f2937;
+    @apply antialiased text-slate-900 bg-[var(--bg-primary)] transition-colors duration-300;
+    font-family: var(--font-primary);
   }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-md border border-[var(--glass-border)] shadow-[var(--glass-shadow)];
+    background: var(--glass-bg);
+  }
+  
+  .glass-card {
+    @apply glass rounded-2xl p-6 transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    @apply shadow-xl border-white/50 -translate-y-1;
+  }
+  
+  .btn-primary {
+    @apply bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-medium 
+           hover:bg-indigo-700 active:scale-95 transition-all duration-200
+           shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-slate-100 text-slate-900 px-5 py-2.5 rounded-xl font-medium 
+           hover:bg-slate-200 active:scale-95 transition-all duration-200
+           flex items-center justify-center gap-2;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-white/50 border border-slate-200 rounded-xl
+           focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500
+           transition-all duration-200 placeholder:text-slate-400;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 hover:bg-slate-600;
 }

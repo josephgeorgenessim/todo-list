@@ -1,88 +1,80 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import taskData from '../data/DataToDoList.json';
+import initialTaskData from '../data/DataToDoList.json';
 
 const TaskContext = createContext(undefined);
 
 export function TaskProvider({ children }) {
     const { user } = useAuth();
-    const [tasks, setTasks] = useState([]);
+    const [allTasks, setAllTasks] = useState(() => {
+        const savedTasks = localStorage.getItem('todo_all_tasks');
+        if (savedTasks) return JSON.parse(savedTasks);
+        return initialTaskData.tasks;
+    });
 
+    // Save all tasks to localStorage whenever they change
     useEffect(() => {
-        if (user) {
-            const userTasks = taskData.tasks.filter((task) => task.userId === user.userId);
-            setTasks(userTasks);
-        } else {
-            setTasks([]);
-        }
-    }, [user]);
+        localStorage.setItem('todo_all_tasks', JSON.stringify(allTasks));
+    }, [allTasks]);
 
-    const addTask = (title, description) => {
+    // Compute tasks for the current user
+    const tasks = user 
+        ? allTasks.filter((task) => task.userId === user.userId)
+        : [];
+
+    const addTask = (taskData) => {
         if (!user) return;
 
         const newTask = {
             taskId: Date.now(),
             userId: user.userId,
-            title,
-            description,
-            status: 'pending',
-            history: [`Task added at ${new Date().toLocaleTimeString()}`],
+            title: taskData.title,
+            description: taskData.description,
+            status: taskData.status || 'pending',
+            priority: taskData.priority || 'Medium',
+            dueDate: taskData.dueDate || null,
+            category: taskData.category || 'General',
+            history: [`Task created at ${new Date().toLocaleString()}`],
             createdAt: new Date().toISOString(),
         };
 
-        const updatedTasks = [...tasks, newTask];
-        setTasks(updatedTasks);
-        // Update the in-memory data
-        taskData.tasks = [...taskData.tasks, newTask];
+        setAllTasks((prev) => [...prev, newTask]);
     };
 
-    const moveTask = (taskId, newStatus) => {
-        const taskIndex = tasks.findIndex(t => t.taskId === taskId);
-        if (taskIndex === -1) return;
-
-        const updatedTasks = [...tasks];
-        const task = updatedTasks[taskIndex];
-        const oldStatus = task.status;
-
-        task.status = newStatus;
-        task.history.push(`Moved from ${oldStatus} to ${newStatus} at ${new Date().toLocaleTimeString()}`);
-
-        setTasks(updatedTasks);
-        // Update the in-memory data
-        const allTasksIndex = taskData.tasks.findIndex(t => t.taskId === taskId);
-        if (allTasksIndex !== -1) {
-            taskData.tasks[allTasksIndex] = task;
-        }
+    const updateTask = (taskId, updates) => {
+        setAllTasks((prev) => prev.map((task) => {
+            if (task.taskId === taskId) {
+                const historyEntry = updates.status 
+                    ? `Status updated to ${updates.status} at ${new Date().toLocaleString()}`
+                    : `Task updated at ${new Date().toLocaleString()}`;
+                
+                return {
+                    ...task,
+                    ...updates,
+                    history: [...task.history, historyEntry]
+                };
+            }
+            return task;
+        }));
     };
 
     const deleteTask = (taskId) => {
-        const updatedTasks = tasks.filter(t => t.taskId !== taskId);
-        setTasks(updatedTasks);
-        // Update the in-memory data
-        taskData.tasks = taskData.tasks.filter(t => t.taskId !== taskId);
+        setAllTasks((prev) => prev.filter((task) => task.taskId !== taskId));
     };
 
-    const editTask = (taskId, title, description) => {
-        const taskIndex = tasks.findIndex(t => t.taskId === taskId);
-        if (taskIndex === -1) return;
-
-        const updatedTasks = [...tasks];
-        const task = updatedTasks[taskIndex];
-
-        task.title = title;
-        task.description = description;
-        task.history.push(`Task edited at ${new Date().toLocaleTimeString()}`);
-
-        setTasks(updatedTasks);
-        // Update the in-memory data
-        const allTasksIndex = taskData.tasks.findIndex(t => t.taskId === taskId);
-        if (allTasksIndex !== -1) {
-            taskData.tasks[allTasksIndex] = task;
-        }
-    };
+    // Keep compatibility with old methods if needed, but modernizing is better
+    const moveTask = (taskId, newStatus) => updateTask(taskId, { status: newStatus });
+    const editTask = (taskId, title, description) => updateTask(taskId, { title, description });
 
     return (
-        <TaskContext.Provider value={{ tasks, addTask, moveTask, deleteTask, editTask }}>
+        <TaskContext.Provider value={{ 
+            tasks, 
+            addTask, 
+            updateTask, 
+            deleteTask, 
+            moveTask, 
+            editTask 
+        }}>
             {children}
         </TaskContext.Provider>
     );
@@ -94,4 +86,4 @@ export function useTasks() {
         throw new Error('useTasks must be used within a TaskProvider');
     }
     return context;
-} 
+}

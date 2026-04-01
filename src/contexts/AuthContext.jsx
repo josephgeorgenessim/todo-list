@@ -1,64 +1,59 @@
-import { createContext, useContext, useState } from 'react';
-import userData from '../data/DataUser.json';
+import { createContext, useContext, useState, useEffect } from 'react';
+import initialUserData from '../data/DataUser.json';
 
 const AuthContext = createContext(undefined);
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem('user');
+        const savedUser = localStorage.getItem('todo_user');
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
-    const login = async (username, password) => {
-        try {
-            const users = userData.users;
-            const foundUser = users.find(
-                (u) => u.username === username && u.password === password
-            );
+    const [allUsers, setAllUsers] = useState(() => {
+        const savedUsers = localStorage.getItem('todo_all_users');
+        if (savedUsers) return JSON.parse(savedUsers);
+        // Fallback to initial data
+        return initialUserData.users;
+    });
 
-            if (foundUser) {
-                setUser(foundUser);
-                localStorage.setItem('user', JSON.stringify(foundUser));
-                return true;
-            }
-            return false;
-        } catch (error) {
-            console.error('Login error:', error);
-            return false;
+    useEffect(() => {
+        localStorage.setItem('todo_all_users', JSON.stringify(allUsers));
+    }, [allUsers]);
+
+    const login = async (username, password) => {
+        const foundUser = allUsers.find(
+            (u) => u.username === username && u.password === password
+        );
+
+        if (foundUser) {
+            setUser(foundUser);
+            localStorage.setItem('todo_user', JSON.stringify(foundUser));
+            return true;
         }
+        return false;
     };
 
     const register = async (username, password) => {
-        try {
-            const users = userData.users;
-
-            if (users.some((u) => u.username === username)) {
-                return false;
-            }
-
-            const newUser = {
-                userId: users.length + 1,
-                username,
-                password,
-            };
-
-            users.push(newUser);
-            // In a real app, you would write this to the file
-            // For now, we'll just update the in-memory data
-            userData.users = users;
-
-            setUser(newUser);
-            localStorage.setItem('user', JSON.stringify(newUser));
-            return true;
-        } catch (error) {
-            console.error('Registration error:', error);
+        if (allUsers.some((u) => u.username === username)) {
             return false;
         }
+
+        const newUser = {
+            userId: Date.now(), // Unique ID
+            username,
+            password,
+        };
+
+        const updatedUsers = [...allUsers, newUser];
+        setAllUsers(updatedUsers);
+        setUser(newUser);
+        localStorage.setItem('todo_user', JSON.stringify(newUser));
+        return true;
     };
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('user');
+        localStorage.removeItem('todo_user');
     };
 
     return (
@@ -74,4 +69,4 @@ export function useAuth() {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
-} 
+}
